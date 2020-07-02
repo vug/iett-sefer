@@ -19,7 +19,7 @@ class Snapshot(object):
         self.ts = self.dt.strftime("%Y-%m-%dT%H-%M-%S")
 
 
-def fetch_store_snapshot():
+def fetch_store_snapshot() -> None:
     t1 = time.time()
     araclar = get_arac_konum()
     t2 = time.time()
@@ -29,13 +29,20 @@ def fetch_store_snapshot():
         pickle.dump(snapshot, f)
 
 
-def load_latest_snapshot():
+def load_latest_snapshots(n: int) -> List[Snapshot]:
     snapshot_files = [
         fn for fn in os.listdir() if fn.startswith("snapshot") and fn.endswith(".pkl")
     ]
     if not snapshot_files:
         raise Exception("No snapshot exist.")
-    latest_file = snapshot_files[-1]
-    with open(latest_file, "rb") as f:
-        snapshot = pickle.load(f)
-    return snapshot
+    snapshots = []
+    latest_files = snapshot_files[-n:]
+    for fn in latest_files:
+        with open(fn, "rb") as f:
+            snapshot = pickle.load(f)
+            snapshots.append(snapshot)
+    return snapshots
+
+
+def load_latest_snapshot() -> Snapshot:
+    return load_latest_snapshots(1)[0]

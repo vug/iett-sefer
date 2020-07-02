@@ -5,6 +5,7 @@ provided by Istanbul Municipality (IBB).
 from dataclasses import dataclass
 import json
 from pprint import pprint
+from typing import List
 
 from zeep import Client
 
@@ -49,7 +50,7 @@ class AracKonum:
     Saat: str
 
 
-def get_arac_konum():
+def get_arac_konum() -> List[AracKonum]:
     konumlar_dict = fetch(Clients.SEFER, "GetFiloAracKonum_json")
 
     def dict_to_dataclass(d):
