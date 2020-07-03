@@ -36,7 +36,7 @@ def load_latest_snapshots(n: int) -> List[Snapshot]:
     if not snapshot_files:
         raise Exception("No snapshot exist.")
     snapshots = []
-    latest_files = snapshot_files[-n:]
+    latest_files = sorted(snapshot_files)[-n:]
     for fn in latest_files:
         with open(fn, "rb") as f:
             snapshot = pickle.load(f)
