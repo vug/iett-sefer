@@ -3,7 +3,7 @@ bokeh serve --show app.py
 """
 from collections import defaultdict
 
-from bokeh.models import ColumnDataSource, MultiLine
+from bokeh.models import ColumnDataSource, MultiLine, WheelZoomTool
 from bokeh.plotting import figure, curdoc
 from bokeh.tile_providers import CARTODBPOSITRON, get_provider
 import numpy as np
@@ -41,6 +41,7 @@ p = figure(
 )
 tile_provider = get_provider(CARTODBPOSITRON)
 p.add_tile(tile_provider)
+p.toolbar.active_scroll = p.select_one(WheelZoomTool)
 
 # lines connecting successive N locations of a bus
 line_source = ColumnDataSource({"lat": [], "lon": [], "licence": []})
