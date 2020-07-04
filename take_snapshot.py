@@ -13,6 +13,9 @@ from snapshot import fetch_store_snapshot
 
 if __name__ == "__main__":
     while True:
-        print(f"Snapshot taken at {time.time()}")
-        fetch_store_snapshot()
+        print(f"Taking snapshot at {time.time()}")
+        try:
+            fetch_store_snapshot()
+        except Exception as e:
+            print("IBB Server failed providing dataset with following error:", e)
         time.sleep(120)
