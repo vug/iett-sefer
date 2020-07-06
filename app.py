@@ -3,7 +3,7 @@ bokeh serve --show app.py
 """
 from collections import defaultdict
 
-from bokeh.models import ColumnDataSource, MultiLine, WheelZoomTool
+from bokeh.models import ColumnDataSource, MultiLine, WheelZoomTool, Div
 from bokeh.plotting import figure, curdoc
 from bokeh.tile_providers import CARTODBPOSITRON, get_provider
 import numpy as np
@@ -29,7 +29,7 @@ def lon2wmlon(lon: float) -> float:
 
 
 p = figure(
-    title="buses",
+    title="İstanbul Bus Locations",
     x_axis_label="longitude",
     y_axis_label="latitude",
     x_range=(3200000, 3250000),  # range bounds in web mercator coordinates
@@ -58,6 +58,21 @@ bus_circle_renderer = p.circle(
     line_color=None,
     fill_alpha=0.5,
     source=circle_source,
+)
+
+explanation = Div(
+    text="""
+<p>Location data is taken from <a href="https://data.ibb.gov.tr/dataset/sefer-gerceklesme-web-servisi">İBB Açık Veri Portalı - İETT Sefer Gerçekleşme Web Servisi</a>.</p>
+<p>Generally it is refreshed every two minutes. But sometimes İBB servers are down and locations are stale. And map only shows last known locations via circles.</p>
+<p>While data is flowing in, most recent locations are indicated via circles. Lines connect current locations to previous locations.
+They indicate were the buses were two minutes ago.
+This gives a sense of movement and direction.
+Faster buses have longer lines/trails. And in areas with denser traffic, lines are shorter etc.</p>
+<p>Use mouse wheel to zoom-in and -out. Press and drag on the map to pan around.</p>
+<p>Hovering over a bus displays its license and the last time its location has been measured.</p>
+<p>Code is on my GitHub page <a href="https://github.com/vug/iett-sefer">iett-sefer</a>.</p>
+""",
+    width=800,
 )
 
 
@@ -96,4 +111,5 @@ def update():
 
 update()
 curdoc().add_root(p)
+curdoc().add_root(explanation)
 curdoc().add_periodic_callback(callback=update, period_milliseconds=60000)
